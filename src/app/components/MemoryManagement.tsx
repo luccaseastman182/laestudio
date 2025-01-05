@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
+type OptimizationResult = {
+  success: boolean;
+  details: string;
+};
+
 type MemoryManagementProps = {
   audioContext: AudioContext;
-  onMemoryOptimized: (result: any) => void;
+  onMemoryOptimized: (result: OptimizationResult) => void;
 };
 
 const MemoryManagement: React.FC<MemoryManagementProps> = ({ audioContext, onMemoryOptimized }) => {
-  const [optimizationResult, setOptimizationResult] = useState<any>(null);
+  const [optimizationResult, setOptimizationResult] = useState<OptimizationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,11 +37,11 @@ const MemoryManagement: React.FC<MemoryManagementProps> = ({ audioContext, onMem
   );
 };
 
-const performMemoryOptimization = async (audioContext: AudioContext): Promise<any> => {
+const performMemoryOptimization = async (audioContext: AudioContext): Promise<OptimizationResult> => {
   // Placeholder for actual memory optimization logic
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ success: true });
+      resolve({ success: true, details: 'Memory optimization successful' });
     }, 1000);
   });
 };

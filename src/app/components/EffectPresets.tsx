@@ -3,19 +3,19 @@ import React, { useState } from 'react';
 type EffectPreset = {
   id: number;
   name: string;
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
 };
 
 type EffectPresetsProps = {
   presets: EffectPreset[];
-  onAddPreset: (name: string, settings: Record<string, any>) => void;
+  onAddPreset: (name: string, settings: Record<string, unknown>) => void;
   onRemovePreset: (id: number) => void;
   onApplyPreset: (id: number) => void;
 };
 
 const EffectPresets: React.FC<EffectPresetsProps> = ({ presets, onAddPreset, onRemovePreset, onApplyPreset }) => {
   const [newPresetName, setNewPresetName] = useState('');
-  const [newPresetSettings, setNewPresetSettings] = useState<Record<string, any>>({});
+  const [newPresetSettings, setNewPresetSettings] = useState<Record<string, unknown>>({});
 
   const handleAddPreset = () => {
     if (newPresetName.trim() !== '') {
