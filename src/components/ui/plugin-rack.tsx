@@ -75,7 +75,7 @@ function EffectControls({
 }
 
 export function PluginRack() {
-    const { activeTrackId, tracks, updateEffect } = useAudioStore()
+    const { activeTrackId, tracks, updateEffect, addEffect, removeEffect, loadPreset, savePreset } = useAudioStore()
     const activeTrack = activeTrackId ? tracks.get(activeTrackId) : null
 
     if (!activeTrack) {
@@ -90,7 +90,7 @@ export function PluginRack() {
         <div className="p-4 space-y-4">
             <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Effects</h2>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" onClick={() => addEffect(activeTrackId)}>
                     <Plus className="h-4 w-4 mr-2" />
                     Add Effect
                 </Button>
@@ -121,6 +121,14 @@ export function PluginRack() {
                     />
                 ))}
             </div>
+            <div className="flex items-center justify-between">
+                <Button size="sm" variant="outline" onClick={() => savePreset(activeTrackId)}>
+                    Save Preset
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => loadPreset(activeTrackId)}>
+                    Load Preset
+                </Button>
+            </div>
         </div>
     )
-} 
+}

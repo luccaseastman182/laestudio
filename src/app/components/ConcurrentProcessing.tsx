@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
+type ProcessingResult = {
+  success: boolean;
+  details: string;
+};
+
 type ConcurrentProcessingProps = {
   audioContext: AudioContext;
-  onProcessingComplete: (result: any) => void;
+  onProcessingComplete: (result: ProcessingResult) => void;
 };
 
 const ConcurrentProcessing: React.FC<ConcurrentProcessingProps> = ({ audioContext, onProcessingComplete }) => {
-  const [processingResult, setProcessingResult] = useState<any>(null);
+  const [processingResult, setProcessingResult] = useState<ProcessingResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,11 +37,11 @@ const ConcurrentProcessing: React.FC<ConcurrentProcessingProps> = ({ audioContex
   );
 };
 
-const performConcurrentProcessing = async (audioContext: AudioContext): Promise<any> => {
+const performConcurrentProcessing = async (audioContext: AudioContext): Promise<ProcessingResult> => {
   // Placeholder for actual concurrent processing logic
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ success: true });
+      resolve({ success: true, details: 'Processing successful' });
     }, 1000);
   });
 };

@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 
+type OptimizationResult = {
+  success: boolean;
+};
+
 type WaveformRenderingOptimizationProps = {
   audioUrl: string;
-  onOptimizationComplete: (result: any) => void;
+  onOptimizationComplete: (result: OptimizationResult) => void;
 };
 
 const WaveformRenderingOptimization: React.FC<WaveformRenderingOptimizationProps> = ({ audioUrl, onOptimizationComplete }) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const waveSurferRef = useRef<WaveSurfer | null>(null);
-  const [optimizationResult, setOptimizationResult] = useState<any>(null);
+  const [optimizationResult, setOptimizationResult] = useState<OptimizationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const WaveformRenderingOptimization: React.FC<WaveformRenderingOptimizationProps
           setOptimizationResult(result);
           onOptimizationComplete(result);
         } catch (err) {
-          setError(err.message);
+          setError((err as Error).message);
         }
       };
 
@@ -55,7 +59,7 @@ const WaveformRenderingOptimization: React.FC<WaveformRenderingOptimizationProps
   );
 };
 
-const performWaveformRenderingOptimization = async (): Promise<any> => {
+const performWaveformRenderingOptimization = async (): Promise<OptimizationResult> => {
   // Placeholder for actual optimization logic
   return new Promise((resolve) => {
     setTimeout(() => {

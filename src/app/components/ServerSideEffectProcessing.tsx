@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 type EffectSettings = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type ServerSideEffectProcessingProps = {
   effectName: string;
   settings: EffectSettings;
-  onProcessComplete: (result: any) => void;
+  onProcessComplete: (result: unknown) => void;
 };
 
 const ServerSideEffectProcessing: React.FC<ServerSideEffectProcessingProps> = ({ effectName, settings, onProcessComplete }) => {
@@ -35,7 +35,7 @@ const ServerSideEffectProcessing: React.FC<ServerSideEffectProcessingProps> = ({
         const result = await response.json();
         onProcessComplete(result);
       } catch (err) {
-        setError(err.message);
+        setError((err as Error).message);
       } finally {
         setProcessing(false);
       }

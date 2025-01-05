@@ -4,7 +4,7 @@ export interface AudioEffect {
   id: string
   type: 'compressor' | 'equalizer' | 'reverb' | 'delay' | 'chorus' | 'flanger'
   node: AudioNode
-  params: Record<string, number>
+  params: { [key: string]: number }
   bypass: boolean
 }
 
@@ -52,7 +52,7 @@ export class EffectChain {
     this.reconnectChain()
   }
 
-  public updateEffect(effectId: string, params: Record<string, number>) {
+  public updateEffect(effectId: string, params: { [key: string]: number }) {
     const effect = this.effects.find(e => e.id === effectId)
     if (effect) {
       Object.entries(params).forEach(([key, value]) => {
@@ -85,4 +85,4 @@ export class EffectChain {
   public destroy() {
     this.disconnectAll()
   }
-} 
+}

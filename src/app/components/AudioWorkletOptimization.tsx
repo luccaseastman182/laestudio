@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
+type OptimizationResult = {
+  success: boolean;
+  details: string;
+};
+
 type AudioWorkletOptimizationProps = {
   audioContext: AudioContext;
-  onOptimizationComplete: (result: any) => void;
+  onOptimizationComplete: (result: OptimizationResult) => void;
 };
 
 const AudioWorkletOptimization: React.FC<AudioWorkletOptimizationProps> = ({ audioContext, onOptimizationComplete }) => {
-  const [optimizationResult, setOptimizationResult] = useState<any>(null);
+  const [optimizationResult, setOptimizationResult] = useState<OptimizationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,11 +37,11 @@ const AudioWorkletOptimization: React.FC<AudioWorkletOptimizationProps> = ({ aud
   );
 };
 
-const performAudioWorkletOptimization = async (audioContext: AudioContext): Promise<any> => {
+const performAudioWorkletOptimization = async (audioContext: AudioContext): Promise<OptimizationResult> => {
   // Placeholder for actual optimization logic
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ success: true });
+      resolve({ success: true, details: 'Optimization successful' });
     }, 1000);
   });
 };
