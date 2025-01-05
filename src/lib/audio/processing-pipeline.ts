@@ -10,6 +10,8 @@ export class ProcessingPipeline {
   private nodes: ProcessingNode[] = []
   private bufferSize: number
   private sampleRate: number
+  private buffer: Float32Array[] = []
+  private parameterAutomation: Map<string, (time: number) => number> = new Map()
 
   constructor(bufferSize = 2048, sampleRate = 44100) {
     this.bufferSize = bufferSize
@@ -55,5 +57,38 @@ export class ProcessingPipeline {
         }
       })
     )
+  }
+
+  addParameterAutomation(id: string, automation: (time: number) => number) {
+    this.parameterAutomation.set(id, automation)
+  }
+
+  removeParameterAutomation(id: string) {
+    this.parameterAutomation.delete(id)
+  }
+
+  updateParameterAutomation(id: string, automation: (time: number) => number) {
+    this.parameterAutomation.set(id, automation)
+  }
+
+  applyParameterAutomation(time: number) {
+    this.parameterAutomation.forEach((automation, id) => {
+      const node = this.nodes.find(n => n.id === id)
+      if (node) {
+        node.process = (input) => {
+          const output = new Float32Array(input.length)
+          const automationValue = automation(time)
+          for (let i = 0; i < input.length; i++) {
+            output[i] = input[i] * automationValue
+          }
+          return output
+        }
+      }
+    })
+  }
+
+  realTimeUpdate(inputBuffer: Float32Array, time: number): Float32Array {
+    this.applyParameterAutomation(time)
+    return this.process(inputBuffer)
   }
 }

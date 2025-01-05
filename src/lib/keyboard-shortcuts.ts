@@ -47,6 +47,11 @@ export function useKeyboardShortcuts() {
     activeTrackId,
     tracks,
     setActiveTrack,
+    deleteTrack,
+    saveProject,
+    loadProject,
+    zoomIn,
+    zoomOut,
   } = useAudioStore()
 
   useEffect(() => {
@@ -75,11 +80,31 @@ export function useKeyboardShortcuts() {
         case 'stop':
           setIsPlaying(false)
           break
+        case 'record':
+          // Placeholder for recording functionality
+          break
         case 'undo':
           undo()
           break
         case 'redo':
           redo()
+          break
+        case 'delete':
+          if (activeTrackId) {
+            deleteTrack(activeTrackId)
+          }
+          break
+        case 'save':
+          saveProject()
+          break
+        case 'load':
+          loadProject()
+          break
+        case 'zoomIn':
+          zoomIn()
+          break
+        case 'zoomOut':
+          zoomOut()
           break
         case 'nextTrack':
           if (activeTrackId) {
@@ -102,5 +127,5 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isPlaying, setIsPlaying, undo, redo, activeTrackId, tracks, setActiveTrack])
+  }, [isPlaying, setIsPlaying, undo, redo, activeTrackId, tracks, setActiveTrack, deleteTrack, saveProject, loadProject, zoomIn, zoomOut])
 } 
