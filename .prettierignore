@@ -1,6 +1,10 @@
 .next
+build
+coverage
 node_modules
 public
-build
-dist
-coverage 
+.contentlayer
+.env*
+package-lock.json
+pnpm-lock.yaml
+yarn.lock 
