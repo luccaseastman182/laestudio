@@ -20,6 +20,8 @@ export class WaveformRenderer {
   private audioData: Float32Array | null = null
   private peakCache: Float32Array | null = null
   private bitmap: ImageBitmap | null = null
+  private markers: { time: number; label: string }[] = []
+  private regions: { start: number; end: number; label: string }[] = []
 
   constructor(config: WaveformConfig) {
     this.canvas = new OffscreenCanvas(config.width, config.height)
@@ -105,11 +107,37 @@ export class WaveformRenderer {
     ctx.stroke()
   }
 
+  drawMarkers(ctx: CanvasRenderingContext2D): void {
+    const { width, height } = this.canvas
+    ctx.fillStyle = this.config.cursorColor
+    ctx.font = '12px Arial'
+    ctx.textAlign = 'center'
+
+    this.markers.forEach(marker => {
+      const x = (marker.time / 100) * width
+      ctx.fillRect(x - 1, 0, 2, height)
+      ctx.fillText(marker.label, x, height - 10)
+    })
+  }
+
+  drawRegions(ctx: CanvasRenderingContext2D): void {
+    const { width, height } = this.canvas
+    ctx.fillStyle = 'rgba(255, 85, 0, 0.3)'
+
+    this.regions.forEach(region => {
+      const startX = (region.start / 100) * width
+      const endX = (region.end / 100) * width
+      ctx.fillRect(startX, 0, endX - startX, height)
+    })
+  }
+
   draw(ctx: CanvasRenderingContext2D, currentTime: number, progress: number): void {
     if (!this.bitmap) return
 
     ctx.drawImage(this.bitmap, 0, 0)
     this.drawTimeGrid(ctx, currentTime)
+    this.drawMarkers(ctx)
+    this.drawRegions(ctx)
 
     const x = this.canvas.width * progress
     ctx.strokeStyle = this.config.cursorColor
@@ -120,9 +148,19 @@ export class WaveformRenderer {
     ctx.stroke()
   }
 
+  addMarker(time: number, label: string): void {
+    this.markers.push({ time, label })
+  }
+
+  addRegion(start: number, end: number, label: string): void {
+    this.regions.push({ start, end, label })
+  }
+
   destroy(): void {
     this.bitmap?.close()
     this.audioData = null
     this.peakCache = null
+    this.markers = []
+    this.regions = []
   }
-} 
+}
