@@ -18,6 +18,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         const masterGain = ctx.createGain()
         masterGain.connect(ctx.destination)
 
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                ctx.suspend()
+            } else {
+                ctx.resume()
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+
         setState({
             audioContext: ctx,
             masterGainNode: masterGain,
@@ -26,6 +36,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
         return () => {
             ctx.close()
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
         }
     }, [])
 

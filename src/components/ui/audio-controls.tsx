@@ -4,7 +4,7 @@ import { useAudioStore } from '@/lib/store/audio-store'
 import { useAudio } from '@/providers/audio-provider'
 import { Slider } from './slider'
 import { Button } from './button'
-import { Volume2, VolumeX, RotateCw } from 'lucide-react'
+import { Volume2, VolumeX, RotateCw, Play, Pause, Stop, Mic } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface AudioControlsProps {
@@ -19,7 +19,9 @@ export function AudioControls({ className }: AudioControlsProps) {
         masterPan,
         setMasterPan,
         isPlaying,
-        setIsPlaying
+        setIsPlaying,
+        currentTime,
+        setCurrentTime
     } = useAudioStore()
 
     const toggleMute = () => {
@@ -28,6 +30,19 @@ export function AudioControls({ className }: AudioControlsProps) {
         } else {
             setMasterVolume(0)
         }
+    }
+
+    const handlePlayPause = () => {
+        setIsPlaying(!isPlaying)
+    }
+
+    const handleStop = () => {
+        setIsPlaying(false)
+        setCurrentTime(0)
+    }
+
+    const handleRecord = () => {
+        // Placeholder for recording functionality
     }
 
     return (
@@ -69,10 +84,30 @@ export function AudioControls({ className }: AudioControlsProps) {
             <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsPlaying(!isPlaying)}
+                onClick={handlePlayPause}
             >
-                <RotateCw className="h-4 w-4" />
+                {isPlaying ? (
+                    <Pause className="h-4 w-4" />
+                ) : (
+                    <Play className="h-4 w-4" />
+                )}
+            </Button>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleStop}
+            >
+                <Stop className="h-4 w-4" />
+            </Button>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleRecord}
+            >
+                <Mic className="h-4 w-4" />
             </Button>
         </div>
     )
-} 
+}

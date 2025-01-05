@@ -72,6 +72,29 @@ export class AudioGraph {
     this.panNode.disconnect()
     this.gainNode.disconnect()
   }
+
+  addEffectNode(node: AudioNode): void {
+    this.effectNodes.push(node)
+    this.reconnectChain()
+  }
+
+  removeEffectNode(node: AudioNode): void {
+    this.effectNodes = this.effectNodes.filter(effectNode => effectNode !== node)
+    this.reconnectChain()
+  }
+
+  private reconnectChain(): void {
+    this.disconnect()
+    this.connectEffects(this.effectNodes)
+  }
+
+  updateEffectNode(oldNode: AudioNode, newNode: AudioNode): void {
+    const index = this.effectNodes.indexOf(oldNode)
+    if (index !== -1) {
+      this.effectNodes[index] = newNode
+      this.reconnectChain()
+    }
+  }
 }
 
 export function createAudioGraph(

@@ -24,6 +24,11 @@ interface AudioState {
   regions: Map<string, { start: number; end: number }>
   history: Array<{ tracks: Map<string, Track>; timestamp: number }>
   historyIndex: number
+  transportState: 'stopped' | 'playing' | 'paused'
+  projectSettings: {
+    sampleRate: number
+    bitDepth: number
+  }
 }
 
 interface AudioActions {
@@ -42,6 +47,9 @@ interface AudioActions {
   removeRegion: (id: string) => void
   undo: () => void
   redo: () => void
+  updateEffectState: (trackId: string, effectId: string, params: { [key: string]: number }) => void
+  setTransportState: (state: 'stopped' | 'playing' | 'paused') => void
+  updateProjectSettings: (settings: { sampleRate: number; bitDepth: number }) => void
 }
 
 export const useAudioStore = create<AudioState & AudioActions>()(
@@ -58,6 +66,11 @@ export const useAudioStore = create<AudioState & AudioActions>()(
         regions: new Map(),
         history: [],
         historyIndex: -1,
+        transportState: 'stopped',
+        projectSettings: {
+          sampleRate: 44100,
+          bitDepth: 16,
+        },
 
         addTrack: (track) =>
           set((state) => {
@@ -148,6 +161,29 @@ export const useAudioStore = create<AudioState & AudioActions>()(
                 state.history[state.historyIndex].tracks
               )
             }
+          }),
+
+        updateEffectState: (trackId, effectId, params) =>
+          set((state) => {
+            const track = state.tracks.get(trackId)
+            if (track) {
+              const effect = track.effects.find(e => e.id === effectId)
+              if (effect) {
+                Object.entries(params).forEach(([key, value]) => {
+                  const param = (effect.node as any)[key]
+                  if (param instanceof AudioParam) {
+                    param.value = value
+                  }
+                })
+              }
+            }
+          }),
+
+        setTransportState: (state) => set({ transportState: state }),
+
+        updateProjectSettings: (settings) =>
+          set((state) => {
+            state.projectSettings = settings
           }),
       })),
       {

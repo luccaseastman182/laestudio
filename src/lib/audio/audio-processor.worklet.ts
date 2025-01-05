@@ -1,4 +1,7 @@
 class AudioProcessor extends AudioWorkletProcessor {
+  private buffer: Float32Array[] = []
+  private bufferSize: number = 1024
+
   static get parameterDescriptors() {
     return [{
       name: 'gain',
@@ -28,8 +31,20 @@ class AudioProcessor extends AudioWorkletProcessor {
       }
     }
 
+    this.buffer.push(new Float32Array(input[0]))
+
+    if (this.buffer.length >= this.bufferSize) {
+      this.processBuffer()
+      this.buffer = []
+    }
+
     return true
+  }
+
+  private processBuffer() {
+    // Placeholder for real-time processing pipeline logic
+    // This is where the actual audio processing would occur
   }
 }
 
-registerProcessor('audio-processor', AudioProcessor) 
+registerProcessor('audio-processor', AudioProcessor)
